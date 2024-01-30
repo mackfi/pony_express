@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
+from backend.users import User
 
 chats_router = APIRouter(prefix="/chats", tags=["Chats"])
 
@@ -12,11 +13,11 @@ class Chat(BaseModel):
     created_at: datetime
 
 @chats_router.get("/", description="Retreives all chats from the DB.", name="Get Chats")
-def GetChats():
+def GetChats() -> list[Chat]:
     return "TODO: Get chats"
 
 @chats_router.get("/{chat_id}", description="Retreives the specified chat from the DB.", name="Get Chat")
-def GetChat():
+def GetChat() -> Chat:
     return "TODO: Get chat"
 
 @chats_router.put("/{chat_id}", description="Updates the specified chat in the DB.", name="Put Chat")
@@ -32,5 +33,7 @@ def GetChatMessages():
     return "TODO: Get chat messages"
 
 @chats_router.get("/{chat_id}/users", description="Retreieves all users associated with the specified chat.", name="Get Chat Users")
-def GetChatUsers():
+def GetChatUsers() -> list[User]:
     return "TODO: Get chat users"
+
+Chat.model_rebuild()
