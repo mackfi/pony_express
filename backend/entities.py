@@ -17,3 +17,19 @@ class Message(BaseModel):
     user_id: str
     text: str
     created_at: datetime
+
+class Metadata(BaseModel):
+    """Represents metadata for a collection."""
+    count: int
+
+class UserCollection(BaseModel):
+    """Represents an API response for a collection of users."""
+
+    meta: Metadata
+    users: list[User]
+
+class ChatCollection(BaseModel):
+    """Represents an API response for a collection of users."""
+
+    meta: Metadata
+    chats: list[Chat]
