@@ -1,16 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from datetime import datetime
-from backend.users import User
+from backend.entities import User, Chat
 
 chats_router = APIRouter(prefix="/chats", tags=["Chats"])
 
-class Chat(BaseModel):
-    id: str
-    name: str
-    user_ids: list[str]
-    owner_id: str
-    created_at: datetime
+
 
 @chats_router.get("/", description="Retreives all chats from the DB.", name="Get Chats")
 def GetChats() -> list[Chat]:
