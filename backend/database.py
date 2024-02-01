@@ -116,6 +116,7 @@ def get_chat_messages_by_id(chat_id: str) -> list[Message]:
 
     :return: list of messages.
     """
+    get_chat_by_id(chat_id)
     return [Message(**message_data) for message_data in DB["chats"][chat_id]["messages"]]
 
 def get_chat_users_by_id(chat_id: str) -> list[User]:
