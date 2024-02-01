@@ -98,6 +98,7 @@ def update_chat(chat_id: str, name: str) -> Chat:
 
     chat = get_chat_by_id(chat_id)
     setattr(chat, "name", name)
+    DB["chats"][chat.id] = chat.model_dump()
     return chat
 
 def delete_chat(chat_id: str):
