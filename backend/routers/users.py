@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from backend.entities import User, Chat, UserCollection
+from backend.entities import User, Chat, UserCollection, ChatCollection
 from typing import Literal
 
 
@@ -32,5 +32,10 @@ def GetUser(user_id: str) -> User:
     return db.get_user_by_id(user_id)
 
 @users_router.get("/{user_id}/chats", description="Retreives all chats associated with a specified user from the DB.", name="Get User Chats")
-def GetUserChats() -> list[Chat]:
-    return "TODO Retrieve the chats from a specific user"
+def GetUserChats(user_id: str, sort: Literal["name"] = "name") -> ChatCollection:
+    sort_key = lambda chat: getattr(chat, sort)
+    chats = db.get_user_chats(user_id)
+    return ChatCollection(
+        meta={"count": len(chats)},
+        chats=sorted(chats, key=sort_key),
+    )

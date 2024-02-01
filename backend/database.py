@@ -135,6 +135,27 @@ def get_chat_users_by_id(chat_id: str) -> list[User]:
     #TODO: Fix formatting, put messages: {} in front and remove chat info
     return user_list
 
+def get_user_chats(user_id: str) -> list[Chat]:
+    """
+    Retrieve all users from a specified chat.
+
+    :return: list of users.
+    """
+    get_user_by_id(user_id)
+    chats = DB["chats"]
+    #print(chats)
+    chat_list = []
+    for key, value in chats.items():
+        for id in value["user_ids"]:
+            if id == user_id:
+                chat_list.append(key)
+    
+    retList = []
+    for id in chat_list:
+        retList.append(get_chat_by_id(id))
+
+    return retList
+
 # def create_animal(animal_create: AnimalCreate) -> AnimalInDB:
 #     """
 #     Create a new animal in the database.
