@@ -6,12 +6,18 @@ class User(BaseModel):
     id: str
     created_at: datetime
 
+class UserCreate(BaseModel):
+    id: str
+
 class Chat(BaseModel):
     id: str
     name: str
     user_ids: list[str]
     owner_id: str
     created_at: datetime
+
+class ChatUpdate(BaseModel):
+    name: str
 
 class Message(BaseModel):
     id: str

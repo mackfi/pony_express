@@ -144,7 +144,6 @@ def get_user_chats(user_id: str) -> list[Chat]:
     """
     get_user_by_id(user_id)
     chats = DB["chats"]
-    #print(chats)
     chat_list = []
     for key, value in chats.items():
         for id in value["user_ids"]:
@@ -156,99 +155,3 @@ def get_user_chats(user_id: str) -> list[Chat]:
         retList.append(get_chat_by_id(id))
 
     return retList
-
-# def create_animal(animal_create: AnimalCreate) -> AnimalInDB:
-#     """
-#     Create a new animal in the database.
-
-#     :param animal_create: attributes of the animal to be created
-#     :return: the newly created animal
-#     """
-
-#     animal = AnimalInDB(
-#         id=uuid4().hex,
-#         intake_date=date.today(),
-#         **animal_create.model_dump(),
-#     )
-#     DB["animals"][animal.id] = animal.model_dump()
-#     return animal
-
-# def update_animal(animal_id: str, animal_update: AnimalUpdate) -> AnimalInDB:
-#     """
-#     Update an animal in the database.
-
-#     :param animal_id: id of the animal to be updated
-#     :param animal_update: attributes to be updated on the animal
-#     :return: the updated animal
-#     :raises EntityNotFoundException: if no such animal id exists
-#     """
-
-#     animal = get_animal_by_id(animal_id)
-#     # option 1 -- write a line for each possible attribute
-#     # name: str = None
-#     # age: int = None
-#     # kind: str = None
-#     # fixed: bool = None
-#     # vaccinated: bool = None
-#     # if animal_update.name is not None:
-#     #     animal.name = animal_update.name
-#     # etc
-
-#     # option 2 -- user .model_dump() method to transform
-#     # animal_update from pydantic model to dict
-#     # then use setattr on the animal model
-#     # for attr, value in animal_update.model_dump().items():
-#     #     if value is not None:
-#     #         setattr(animal, attr, value)
-
-#     # option 3 -- almost the same as option 2
-#     for attr, value in animal_update.model_dump(exclude_none=True).items():
-#         setattr(animal, attr, value)
-
-#     # option 4 -- use dictionary merging to build a new animal
-#     # animal = AnimalInDB(
-#     #     **{
-#     #         **animal.model_dump(),
-#     #         **animal_update.model_dump(exclude_none=True),
-#     #     },
-#     # )
-
-#     # update in database
-#     DB["animals"][animal.id] = animal.model_dump()
-
-#     return animal
-
-# #   -------- users --------   #
-
-
-
-# def create_user(user_create: UserCreate) -> UserInDB:
-#     """
-#     Create a new user in the database.
-
-#     :param user_create: attributes of the user to be created
-#     :return: the newly created user
-#     """
-
-#     user = UserInDB(
-#         id=uuid4().hex,
-#         intake_date=date.today(),
-#         **user_create.model_dump(),
-#     )
-#     DB["users"][user.id] = user.model_dump()
-#     return user
-
-
-# def update_user(user_id: str, user_update: UserUpdate) -> UserInDB:
-#     """
-#     Update an user in the database.
-
-#     :param user_id: id of the user to be updated
-#     :param user_update: attributes to be updated on the user
-#     :return: the updated user
-#     """
-
-#     user = get_user_by_id(user_id)
-#     for key, value in user_update.update_attributes().items():
-#         setattr(user, key, value)
-#     return user

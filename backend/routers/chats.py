@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from backend.entities import User, Chat, UserCollection, ChatCollection, MessageCollection
+from backend.entities import User, Chat, UserCollection, ChatCollection, MessageCollection, ChatUpdate
 from typing import Literal
 
 chats_router = APIRouter(prefix="/chats", tags=["Chats"])
@@ -28,8 +28,8 @@ def GetChat(chat_id: str):
     return {"chat": db.get_chat_by_id(chat_id)}
 
 @chats_router.put("/{chat_id}", description="Updates the specified chat in the DB.", name="Put Chat")
-def PutChat(chat_id: str, name: str):
-    return db.update_chat(chat_id, name)
+def PutChat(chat_id: str, chat_update: ChatUpdate):
+    return {"chat": db.update_chat(chat_id, chat_update.name)}
 
 @chats_router.delete("/{chat_id}", description="Deletes the specified chat from the DB.", name="Delete Chat", status_code=204, response_model=None)
 def DeleteChat(chat_id: str) -> None:

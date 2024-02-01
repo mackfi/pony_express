@@ -1,6 +1,6 @@
-from fastapi import APIRouter, HTTPException
-from backend.entities import User, Chat, UserCollection, ChatCollection
-from typing import Literal
+from fastapi import APIRouter, HTTPException, Body
+from backend.entities import User, Chat, UserCollection, ChatCollection, UserCreate
+from typing import Literal, Annotated
 import json
 
 
@@ -25,8 +25,8 @@ def GetUsers(
     )
 
 @users_router.post("/", description="Adds the specified user to the DB.", name="Post Users")
-def PostUsers(user_id: str):
-    return {"user": db.create_user(user_id)}
+def PostUsers(user_create: UserCreate):
+    return {"user": db.create_user(user_create.id)}
 
 @users_router.get("/{user_id}", description="Retreives the specified user from the DB.", name="Get User")
 def GetUser(user_id: str):
