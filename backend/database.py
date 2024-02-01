@@ -74,6 +74,7 @@ def get_user_by_id(user_id: str) -> User:
     
     raise EntityNotFoundException(entity_name="User", entity_id=user_id)
 
+
 def get_chat_by_id(chat_id: str) -> Chat:
     """
     Retrieve an chat from the database.

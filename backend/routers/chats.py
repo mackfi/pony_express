@@ -8,11 +8,11 @@ from backend import database as db
 
 
 @chats_router.get("/", description="Retreives all chats from the DB.", name="Get Chats")
-def GetUsers(
+def GetChats(
     sort: Literal["name"] = "name"
 ) -> ChatCollection:
     
-    """Get a collection of users."""
+    """Get a collection of chats."""
 
     sort_key = lambda chat: getattr(chat, sort)
     chats = db.get_all_chats()
@@ -24,8 +24,8 @@ def GetUsers(
     )
 
 @chats_router.get("/{chat_id}", description="Retreives the specified chat from the DB.", name="Get Chat")
-def GetChat(chat_id: str) -> Chat:
-    return db.get_chat_by_id(chat_id)
+def GetChat(chat_id: str):
+    return {"chat": db.get_chat_by_id(chat_id)}
 
 @chats_router.put("/{chat_id}", description="Updates the specified chat in the DB.", name="Put Chat")
 def PutChat(chat_id: str, name: str):
