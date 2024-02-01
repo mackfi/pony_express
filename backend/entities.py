@@ -39,4 +39,4 @@ class MessageCollection(BaseModel):
     """Represents an API response for a collection of messages."""
 
     meta: Metadata
-    chats: list[Message]
+    messages: list[Message]

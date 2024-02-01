@@ -42,7 +42,7 @@ def GetChatMessages(chat_id: str, sort: Literal["created_at"] = "created_at") ->
     messages = db.get_chat_messages_by_id(chat_id)
     return MessageCollection(
         meta={"count": len(messages)},
-        chats=sorted(messages, key=sort_key),
+        messages=sorted(messages, key=sort_key),
     )
 
 @chats_router.get("/{chat_id}/users", description="Retreieves all users associated with the specified chat.", name="Get Chat Users")
