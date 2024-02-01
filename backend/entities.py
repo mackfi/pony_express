@@ -29,7 +29,13 @@ class UserCollection(BaseModel):
     users: list[User]
 
 class ChatCollection(BaseModel):
-    """Represents an API response for a collection of users."""
+    """Represents an API response for a collection of chats."""
 
     meta: Metadata
     chats: list[Chat]
+
+class MessageCollection(BaseModel):
+    """Represents an API response for a collection of messages."""
+
+    meta: Metadata
+    chats: list[Message]

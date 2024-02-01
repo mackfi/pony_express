@@ -86,6 +86,54 @@ def get_chat_by_id(chat_id: str) -> Chat:
     
     raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
 
+def update_chat(chat_id: str, name: str) -> Chat:
+    """
+    Update a chat in the database.
+
+    :param user_id: id of the chat to be updated
+    :param user_update: attributes to be updated on the chat
+    :return: the updated chat
+    """
+
+    chat = get_chat_by_id(chat_id)
+    setattr(chat, "name", name)
+    return chat
+
+def delete_chat(chat_id: str):
+    """
+    Delete an animal from the database.
+
+    :param animal_id: the id of the animal to be deleted
+    :raises EntityNotFoundException: if no such animal exists
+    """
+
+    chat = get_chat_by_id(chat_id)
+    del DB["chats"][chat.id]
+
+def get_chat_messages_by_id(chat_id: str) -> list[Message]:
+    """
+    Retrieve all messages from a specified chat.
+
+    :return: list of messages.
+    """
+    return [Message(**message_data) for message_data in DB["chats"][chat_id]["messages"]]
+
+def get_chat_users_by_id(chat_id: str) -> list[User]:
+    """
+    Retrieve all users from a specified chat.
+
+    :return: list of users.
+    """
+    get_chat_by_id(chat_id)
+    user_ids = DB["chats"][chat_id]["user_ids"]
+    user_list = []
+    for id in user_ids:
+        user_list.append(get_user_by_id(id))
+
+    print(user_list)
+    #TODO: Fix formatting, put messages: {} in front and remove chat info
+    return user_list
+
 # def create_animal(animal_create: AnimalCreate) -> AnimalInDB:
 #     """
 #     Create a new animal in the database.
@@ -101,22 +149,6 @@ def get_chat_by_id(chat_id: str) -> Chat:
 #     )
 #     DB["animals"][animal.id] = animal.model_dump()
 #     return animal
-
-
-# def get_animal_by_id(animal_id: str) -> AnimalInDB:
-#     """
-#     Retrieve an animal from the database.
-
-#     :param animal_id: id of the animal to be retrieved
-#     :return: the retrieved animal
-#     :raises EntityNotFoundException: if no such animal id exists
-#     """
-
-#     if animal_id in DB["animals"]:
-#         return AnimalInDB(**DB["animals"][animal_id])
-
-#     raise EntityNotFoundException(entity_name="Animal", entity_id=animal_id)
-
 
 # def update_animal(animal_id: str, animal_update: AnimalUpdate) -> AnimalInDB:
 #     """
@@ -163,30 +195,8 @@ def get_chat_by_id(chat_id: str) -> Chat:
 
 #     return animal
 
-
-# def delete_animal(animal_id: str):
-#     """
-#     Delete an animal from the database.
-
-#     :param animal_id: the id of the animal to be deleted
-#     :raises EntityNotFoundException: if no such animal exists
-#     """
-
-#     animal = get_animal_by_id(animal_id)
-#     del DB["animals"][animal.id]
-
-
 # #   -------- users --------   #
 
-
-# def get_all_users() -> list[UserInDB]:
-#     """
-#     Retrieve all users from the database.
-
-#     :return: ordered list of users
-#     """
-
-#     return [UserInDB(**user_data) for user_data in DB["users"].values()]
 
 
 # def create_user(user_create: UserCreate) -> UserInDB:
@@ -206,17 +216,6 @@ def get_chat_by_id(chat_id: str) -> Chat:
 #     return user
 
 
-# def get_user_by_id(user_id: str) -> UserInDB:
-#     """
-#     Retrieve an user from the database.
-
-#     :param user_id: id of the user to be retrieved
-#     :return: the retrieved user
-#     """
-
-#     return UserInDB(**DB["users"][user_id])
-
-
 # def update_user(user_id: str, user_update: UserUpdate) -> UserInDB:
 #     """
 #     Update an user in the database.
@@ -230,14 +229,3 @@ def get_chat_by_id(chat_id: str) -> Chat:
 #     for key, value in user_update.update_attributes().items():
 #         setattr(user, key, value)
 #     return user
-
-
-# def delete_user(user_id: str):
-#     """
-#     Delete an user from the database.
-
-#     :param user_id: the id of the user to be deleted
-#     """
-
-#     user = get_user_by_id(user_id)
-#     del DB["users"][user.id]
