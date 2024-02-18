@@ -4,6 +4,7 @@ from backend.routers.users import users_router
 from backend.routers.chats import chats_router
 from pydantic import BaseModel
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.database import DuplicateEntityException, EntityNotFoundException
 
@@ -48,6 +49,14 @@ def handle_entity_not_found(
             },
         },
     )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"], # change this as appropriate for your setup
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #Users
 
