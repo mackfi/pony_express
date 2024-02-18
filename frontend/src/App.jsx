@@ -15,7 +15,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<h1>placeholder</h1>} />
+          <Route path="/" element={<ChatsPage/>} />
           <Route path="/chats" element={<ChatsPage/>} />
           <Route path="/chats/:chatId" element={<ChatsPage/>} />
           <Route path="/error/404" element={<NotFound />} />

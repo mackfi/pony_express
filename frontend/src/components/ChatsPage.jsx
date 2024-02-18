@@ -9,7 +9,7 @@ function ChatsPage() {
     return (
       <div className="chats-page">
         <ChatListContainer />
-        {chatId ? <ChatCardQueryContainer chatId={chatId} /> : <h2>pick a chat</h2>}
+        {chatId ? <ChatCardQueryContainer chatId={chatId} /> : <h2 className="col-header">select a chat</h2>}
       </div>
     );
 }
@@ -27,14 +27,14 @@ function ChatListContainer() {
       if (data?.chats) {
         return (
           <div className="chat-list-container">
-            <h2>chats</h2>
+          <a href="/chats" className="nav-link"><h2 className="col-header nav-link">chats</h2></a>
             <ChatList chats={data.chats} />
           </div>
         )
       }
     
       return (
-        <h2>chat list</h2>
+        <a href="/chats" className="nav-link"><h2 className="col-header nav-link">chats</h2></a>
       );
 }
 

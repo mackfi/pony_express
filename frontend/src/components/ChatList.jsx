@@ -18,12 +18,10 @@ function ChatListItem({chat}) {
             {chat.name}
           </div>
           <div className="chat-list-item-detail">
-            {chat.user_ids.map((user) => (
-                <div key={user.id}> {user} </div>
-            ))}
+            {chat.user_ids.join(", ")}
           </div>
           <div className="chat-list-item-detail">
-            Created at: {chat.created_at}
+            Created at: {new Date(chat.created_at).toDateString()}
           </div>
         </Link>
       )

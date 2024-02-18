@@ -1,17 +1,81 @@
-.chat-list-item {
+.chats-page {
+    display: flex;
+    flex-direction: row;
+    width: 90vw;
+    height: 75vh;
+}
+.col-header {
+    border: 2px solid ghostwhite;
+    height: 8vh;
+    flex-grow: 2;
+}
+
+.chat-list {
+    
     display: flex;
     flex-direction: column;
+    max-height: 75vh;
+    width: 22vw;
+    overflow-y: scroll;
+    
+}
+
+.chat-list-item {
     align-items: center;
     align-items: center;
     margin: 20px;
     background-color: #b1cdc2;
     border: 2px solid #56887d;
-    border-radius: 20px;
+    border-radius: 10px;
+    padding: 7px;
 }
+.chat-list-item:hover {
+    background-color: darksalmon;
+}
+
 .chat-list-item-name {
-    font-size: 2em;
+    font-size: large;
     color:cornflowerblue;
 }
 .chat-list-item-detail {
+    font-size: small;
     color:lemonchiffon;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    max-height: 75vh;
+    width: 68vw;
+    overflow-y: scroll;
+}
+
+.message-card {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid cornflowerblue;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.message-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.message-user {
+    font-size:large;
+    color: #56887d;
+}
+.message-details {
+    font-size: small;
+    color:lemonchiffon;
+}
+
+.nav-link:visited {
+    color: white;
+}
+.nav-link:hover {
+    background-color: #56887d;
 }
