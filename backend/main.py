@@ -8,11 +8,22 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.database import DuplicateEntityException, EntityNotFoundException
 
+from contextlib import asynccontextmanager
+
+from backend.database import create_db_and_tables
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
 app = FastAPI(
     title="Pony Express",
     description="API for managing a chat application.",
-    version="0.1.0"
+    version="0.1.0",
+    lifespan=lifespan,
 )
+
 
 
 app.include_router(users_router)

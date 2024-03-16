@@ -1,12 +1,36 @@
 import json
 from datetime import date, datetime
 from uuid import uuid4
+from sqlmodel import Session, SQLModel, create_engine
+
 
 from backend.entities import (
     User,
     Chat,
     Message
 )
+
+from backend.schema import (
+    UserChatLinkInDB,
+    UserInDB,
+    ChatInDB,
+    MessageInDB
+)
+
+engine = create_engine(
+    "sqlite:///backend/pony_express.db",
+    echo=True,
+    connect_args={"check_same_thread": False},
+)
+
+
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
+
+
+def get_session():
+    with Session(engine) as session:
+        yield session
 
 with open("backend/fake_db.json", "r") as f:
     DB = json.load(f)
