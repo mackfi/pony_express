@@ -84,7 +84,7 @@ class Chat(SQLModel):
     owner: User
     created_at: datetime
 
-class ChatUpdate(BaseModel):
+class ChatUpdate(SQLModel):
     name: str
 
 class Message(SQLModel):

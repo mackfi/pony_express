@@ -8,6 +8,7 @@ from backend.schema import (
     User,
     Chat,
     Message,
+    ChatUpdate,
 
     UserChatLinkInDB,
     UserInDB,
@@ -109,7 +110,7 @@ def get_chat_by_id(chat_id: str) -> Chat:
     
     raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
 
-def update_chat(session: Session, chat_id: int, name: str) -> Chat:
+def update_chat(session: Session, chat_id: int, update: ChatUpdate) -> Chat:
     """
     Update a chat in the database.
 
@@ -118,9 +119,14 @@ def update_chat(session: Session, chat_id: int, name: str) -> Chat:
     :return: the updated chat
     """
 
-    chat = get_chat_by_id(chat_id)
-    setattr(chat, "name", name)
-    DB["chats"][chat.id] = chat.model_dump()
+    chat = session.get(ChatInDB, chat_id)
+    for attr, value in update.model_dump(exclude_unset=True).items():
+        setattr(chat, attr, value)
+
+    session.add(chat)
+    session.commit()
+    session.refresh(chat)
+
     return chat
 
 def delete_chat(chat_id: str):
@@ -134,30 +140,27 @@ def delete_chat(chat_id: str):
     chat = get_chat_by_id(chat_id)
     del DB["chats"][chat.id]
 
-def get_chat_messages_by_id(chat_id: int) -> list[Message]:
+def get_chat_messages_by_id(session: Session, chat_id: int) -> list[Message]:
     """
     Retrieve all messages from a specified chat.
 
     :return: list of messages.
     """
-    get_chat_by_id(chat_id)
-    return [Message(**message_data) for message_data in DB["chats"][chat_id]["messages"]]
+    chat = session.get(ChatInDB, chat_id)
+    if chat:
+        return chat.messages
+    raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
 
-def get_chat_users_by_id(chat_id: str) -> list[User]:
+def get_chat_users_by_id(session: Session, chat_id: int) -> list[User]:
     """
     Retrieve all users from a specified chat.
 
     :return: list of users.
     """
-    get_chat_by_id(chat_id)
-    user_ids = DB["chats"][chat_id]["user_ids"]
-    user_list = []
-    for id in user_ids:
-        user_list.append(get_user_by_id(id))
-
-    print(user_list)
-    #TODO: Fix formatting, put messages: {} in front and remove chat info
-    return user_list
+    chat = session.get(ChatInDB, chat_id)
+    if chat:
+        return chat.users
+    raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
 
 def get_user_chats(session: Session, user_id: int) -> list[Chat]:
     """
