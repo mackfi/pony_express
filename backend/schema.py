@@ -79,19 +79,19 @@ class UserCreate(BaseModel):
     id: str
 
 class Chat(SQLModel):
-    id: str
+    id: int
     name: str
-    user_ids: list[str]
-    owner_id: str
+    owner: User
     created_at: datetime
 
 class ChatUpdate(BaseModel):
     name: str
 
 class Message(SQLModel):
-    id: str
-    user_id: str
+    id: int
     text: str
+    chat_id: int
+    user: User
     created_at: datetime
 
 class Metadata(BaseModel):

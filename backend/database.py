@@ -56,14 +56,14 @@ def get_all_users(session: Session) -> list[UserInDB]:
 
     return session.exec(select(UserInDB)).all()
 
-def get_all_chats() -> list[Chat]:
+def get_all_chats(session: Session) -> list[Chat]:
     """
     Retrieve all users from the database.
 
     :return: ordered list of users
     """
 
-    return [Chat(**chat_data) for chat_data in DB["chats"].values()]
+    return session.exec(select(ChatInDB)).all()
 
 def create_user(user_id: str) -> User:
     """
@@ -83,16 +83,17 @@ def create_user(user_id: str) -> User:
     DB["users"][user.id] = user.model_dump()
     return user
 
-def get_user_by_id(user_id: str) -> User:
+def get_user_by_id(session: Session, user_id: int) -> User:
     """
     Retrieve an user from the database.
 
     :param user_id: id of the user to be retrieved
     :return: the retrieved user
     """
-    if user_id in DB["users"]:
-        return User(**DB["users"][user_id])
-    
+    user = session.get(UserInDB, user_id)
+    if user:
+        return user
+
     raise EntityNotFoundException(entity_name="User", entity_id=user_id)
 
 

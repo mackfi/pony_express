@@ -25,14 +25,14 @@ def GetUsers(#sort: Literal["id"] = "id",
         users= users#sorted(users, key=sort_key),
     )
 
-@users_router.post("/", description="Adds the specified user to the DB.", name="Post Users")
-def PostUsers(user_create: UserCreate,
-              session: Session = Depends(db.get_session)):
-    return {"user": db.create_user(user_create.id)}
+# @users_router.post("/", description="Adds the specified user to the DB.", name="Post Users")
+# def PostUsers(user_create: UserCreate,
+#               session: Session = Depends(db.get_session)):
+#     return {"user": db.create_user(user_create.id)}
 
 @users_router.get("/{user_id}", description="Retreives the specified user from the DB.", name="Get User")
-def GetUser(user_id: str, session: Session = Depends(db.get_session)):
-    return {"user": db.get_user_by_id(user_id)}
+def GetUser(user_id: int, session: Session = Depends(db.get_session)):
+    return {"user": db.get_user_by_id(session, user_id)}
 
 @users_router.get("/{user_id}/chats", description="Retreives all chats associated with a specified user from the DB.", name="Get User Chats")
 def GetUserChats(user_id: str, sort: Literal["name"] = "name", session: Session = Depends(db.get_session)) -> ChatCollection:

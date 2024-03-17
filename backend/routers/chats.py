@@ -11,19 +11,19 @@ from backend import database as db
 
 @chats_router.get("/", description="Retreives all chats from the DB.", name="Get Chats")
 def GetChats(
-    sort: Literal["name"] = "name",
+    #sort: Literal["name"] = "name",
     session: Session = Depends(db.get_session)
 ) -> ChatCollection:
     
     """Get a collection of chats."""
 
-    sort_key = lambda chat: getattr(chat, sort)
-    chats = db.get_all_chats()
+    #sort_key = lambda chat: getattr(chat, sort)
+    chats = db.get_all_chats(session)
 
 
     return ChatCollection(
         meta={"count": len(chats)},
-        chats=sorted(chats, key=sort_key),
+        chats=chats#sorted(chats, key=sort_key),
     )
 
 @chats_router.get("/{chat_id}", description="Retreives the specified chat from the DB.", name="Get Chat")
