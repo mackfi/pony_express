@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Body, Depends
-from backend.entities import User, Chat, UserCollection, ChatCollection, UserCreate
+from backend.schema import User, Chat, UserCollection, ChatCollection, UserCreate
 from typing import Literal, Annotated
 import json
 
@@ -10,20 +10,19 @@ users_router = APIRouter(prefix="/users", tags=["Users"])
 from backend import database as db
 
 @users_router.get("/", description="Retreives all users from the DB.", name="Get Users")
-def GetUsers(
-    sort: Literal["id"] = "id",
+def GetUsers(#sort: Literal["id"] = "id",
     session: Session = Depends(db.get_session)
 ) -> UserCollection:
     
     """Get a collection of users."""
 
-    sort_key = lambda user: getattr(user, sort)
-    users = db.get_all_users()
+    # sort_key = lambda user: getattr(user, sort)
+    users = db.get_all_users(session)
 
 
     return UserCollection(
         meta={"count": len(users)},
-        users=sorted(users, key=sort_key),
+        users= users#sorted(users, key=sort_key),
     )
 
 @users_router.post("/", description="Adds the specified user to the DB.", name="Post Users")

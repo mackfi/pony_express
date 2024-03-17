@@ -1,21 +1,20 @@
 import json
 from datetime import date, datetime
 from uuid import uuid4
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import Session, SQLModel, create_engine, select
 
-
-from backend.entities import (
-    User,
-    Chat,
-    Message
-)
 
 from backend.schema import (
+    User,
+    Chat,
+    Message,
+
     UserChatLinkInDB,
     UserInDB,
     ChatInDB,
     MessageInDB
 )
+
 
 engine = create_engine(
     "sqlite:///backend/pony_express.db",
@@ -47,17 +46,15 @@ class DuplicateEntityException(Exception):
         self.entity_id = entity_id
 
 
-#   -------- animals --------   #
 
-
-def get_all_users() -> list[User]:
+def get_all_users(session: Session) -> list[UserInDB]:
     """
     Retrieve all users from the database.
 
     :return: ordered list of users
     """
 
-    return [User(**user_data) for user_data in DB["users"].values()]
+    return session.exec(select(UserInDB)).all()
 
 def get_all_chats() -> list[Chat]:
     """

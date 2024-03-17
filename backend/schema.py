@@ -1,8 +1,11 @@
 from datetime import datetime
 from typing import Optional
 
+from pydantic import BaseModel
 from sqlmodel import Field, Relationship, SQLModel
 
+from datetime import datetime
+import json
 
 class UserChatLinkInDB(SQLModel, table=True):
     """Database model for many-to-many relation of users to chats."""
@@ -61,3 +64,54 @@ class MessageInDB(SQLModel, table=True):
 
     user: UserInDB = Relationship()
     chat: ChatInDB = Relationship(back_populates="messages")
+
+
+#
+#   OLD MODELS
+#
+class User(SQLModel):
+    id: int
+    username: str
+    email: str
+    created_at: datetime
+
+class UserCreate(BaseModel):
+    id: str
+
+class Chat(SQLModel):
+    id: str
+    name: str
+    user_ids: list[str]
+    owner_id: str
+    created_at: datetime
+
+class ChatUpdate(BaseModel):
+    name: str
+
+class Message(SQLModel):
+    id: str
+    user_id: str
+    text: str
+    created_at: datetime
+
+class Metadata(BaseModel):
+    """Represents metadata for a collection."""
+    count: int
+
+class UserCollection(BaseModel):
+    """Represents an API response for a collection of users."""
+
+    meta: Metadata
+    users: list[User]
+
+class ChatCollection(BaseModel):
+    """Represents an API response for a collection of chats."""
+
+    meta: Metadata
+    chats: list[Chat]
+
+class MessageCollection(BaseModel):
+    """Represents an API response for a collection of messages."""
+
+    meta: Metadata
+    messages: list[Message]

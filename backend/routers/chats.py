@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from backend.entities import User, Chat, UserCollection, ChatCollection, MessageCollection, ChatUpdate
+from backend.schema import User, Chat, UserCollection, ChatCollection, MessageCollection, ChatUpdate
 from typing import Literal
 
 from sqlmodel import Session
