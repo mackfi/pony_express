@@ -33,11 +33,11 @@ def GetChat(chat_id: str, session: Session = Depends(db.get_session)):
 @chats_router.put("/{chat_id}", description="Updates the specified chat in the DB.", name="Put Chat")
 def PutChat(chat_id: str, chat_update: ChatUpdate, 
             session: Session = Depends(db.get_session)):
-    return {"chat": db.update_chat(chat_id, chat_update.name)}
+    return {"chat": db.update_chat(session, chat_id, chat_update)}
 
-@chats_router.delete("/{chat_id}", description="Deletes the specified chat from the DB.", name="Delete Chat", status_code=204, response_model=None)
-def DeleteChat(chat_id: str, session: Session = Depends(db.get_session)) -> None:
-    return db.delete_chat(chat_id)
+# @chats_router.delete("/{chat_id}", description="Deletes the specified chat from the DB.", name="Delete Chat", status_code=204, response_model=None)
+# def DeleteChat(chat_id: str, session: Session = Depends(db.get_session)) -> None:
+#     return db.delete_chat(chat_id)
 
 @chats_router.get("/{chat_id}/messages", description="Retreives all messages associated with the specified chat.", name="Get Chat Messages")
 def GetChatMessages(chat_id: str, sort: Literal["created_at"] = "created_at", session: Session = Depends(db.get_session)) -> MessageCollection:

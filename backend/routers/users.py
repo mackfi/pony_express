@@ -37,7 +37,7 @@ def GetUser(user_id: int, session: Session = Depends(db.get_session)):
 @users_router.get("/{user_id}/chats", description="Retreives all chats associated with a specified user from the DB.", name="Get User Chats")
 def GetUserChats(user_id: str, sort: Literal["name"] = "name", session: Session = Depends(db.get_session)) -> ChatCollection:
     sort_key = lambda chat: getattr(chat, sort)
-    chats = db.get_user_chats(user_id)
+    chats = db.get_user_chats(session, user_id)
     return ChatCollection(
         meta={"count": len(chats)},
         chats=sorted(chats, key=sort_key),

@@ -109,7 +109,7 @@ def get_chat_by_id(chat_id: str) -> Chat:
     
     raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
 
-def update_chat(chat_id: str, name: str) -> Chat:
+def update_chat(session: Session, chat_id: int, name: str) -> Chat:
     """
     Update a chat in the database.
 
@@ -134,7 +134,7 @@ def delete_chat(chat_id: str):
     chat = get_chat_by_id(chat_id)
     del DB["chats"][chat.id]
 
-def get_chat_messages_by_id(chat_id: str) -> list[Message]:
+def get_chat_messages_by_id(chat_id: int) -> list[Message]:
     """
     Retrieve all messages from a specified chat.
 
@@ -159,22 +159,17 @@ def get_chat_users_by_id(chat_id: str) -> list[User]:
     #TODO: Fix formatting, put messages: {} in front and remove chat info
     return user_list
 
-def get_user_chats(user_id: str) -> list[Chat]:
+def get_user_chats(session: Session, user_id: int) -> list[Chat]:
     """
     Retrieve all users from a specified chat.
 
     :return: list of users.
     """
-    get_user_by_id(user_id)
-    chats = DB["chats"]
-    chat_list = []
-    for key, value in chats.items():
-        for id in value["user_ids"]:
-            if id == user_id:
-                chat_list.append(key)
+    user = get_user_by_id(session, user_id)
+    if user:
+        return user.chats
+    raise EntityNotFoundException(entity_name="User", entity_id=user_id)
     
     retList = []
-    for id in chat_list:
-        retList.append(get_chat_by_id(id))
 
     return retList
