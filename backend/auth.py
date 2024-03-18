@@ -91,25 +91,24 @@ def get_current_user(
     user = _decode_access_token(session, token)
     return user
 
-@auth_router.post("/registration")
+@auth_router.post("/registration", status_code=201)
 def register_new_user(registration: UserRegistration, session: Annotated[Session, Depends(db.get_session)]):
     hashed_password = pwd_context.hash(registration.password)
     user = UserInDB(
         **registration.model_dump(),
         hashed_password=hashed_password,
     )
-    other_usernames = session.get(UserInDB, user.username)
-    other_emails = session.get(UserInDB, user.email)
+    others = session.exec(select(UserInDB)).all()
     
-    try:
-        session.add(user)
-        session.commit()
-        session.refresh(user)
-    except:
-        if other_emails:
+    for other in others:
+        if other.email == user.email:
             raise DuplicateEntityException(entity_name="User", entity_field="email", entity_value=user.email)
-        if other_usernames:
+        if other.username == user.username:
             raise DuplicateEntityException(entity_name="User", entity_field="username", entity_value=user.username)
+
+    session.add(user)
+    session.commit()
+    session.refresh(user)
     
     return user
 
