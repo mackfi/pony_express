@@ -1,5 +1,7 @@
 import json
 from datetime import date, datetime
+from typing import Annotated
+from fastapi import Query
 from uuid import uuid4
 from sqlmodel import Session, SQLModel, create_engine, select
 
@@ -102,7 +104,7 @@ def get_user_by_id(session: Session, user_id: int) -> User:
     raise EntityNotFoundException(entity_name="User", entity_id=user_id)
 
 
-def get_chat_by_id(session: Session, chat_id: int) -> ChatResponse:
+def get_chat_by_id(session: Session, chat_id: int, include: list[str] = None) -> ChatResponse:
     """
     Retrieve an chat from the database.
 
@@ -111,12 +113,29 @@ def get_chat_by_id(session: Session, chat_id: int) -> ChatResponse:
     """
     chat = session.get(ChatInDB, chat_id)
     if chat:
-        users = chat.users
         messages = chat.messages
-        meta = ChatMetaData(message_count=len(messages), user_count=len(users))
-        return ChatResponse(meta=meta, chat=chat, messages=messages, users=users)
+        users = chat.users
+        message_count = len(messages)
+        user_count = len(users)
+        if include:
+            if "users" not in include:
+                users = None
+            if "messages" not in include:
+                messages = None
+        else: 
+            messages = None
+            users = None
+        meta = ChatMetaData(message_count=message_count, user_count=user_count)
+        if messages and users:
+            return ChatResponse(meta=meta, chat=chat, messages=messages, users=users)
+        if messages:
+            return ChatResponse(meta=meta, chat=chat, messages=messages)
+        if users:
+            return ChatResponse(meta=meta, chat=chat, users=users)
+        
+        return ChatResponse(meta=meta, chat=chat)
     
-    raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
+    raise EntityNotFoundException(entity_name="Chat", entity_id=include)
 
 def update_chat(session: Session, chat_id: int, update: ChatUpdate) -> Chat:
     """

@@ -111,8 +111,10 @@ class Message(SQLModel):
 class ChatResponse(BaseModel):
     meta: ChatMetaData
     chat: Chat
-    messages: list[Message]
-    users: list[User]
+    messages: list[Message] = None
+    users: list[User] = None
+
+
 
 class Metadata(BaseModel):
     """Represents metadata for a collection."""
