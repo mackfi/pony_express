@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from backend.routers.users import users_router
 from backend.routers.chats import chats_router
+from backend.auth import auth_router
 from pydantic import BaseModel
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,6 +29,7 @@ app = FastAPI(
 
 app.include_router(users_router)
 app.include_router(chats_router)
+app.include_router(auth_router)
 
 @app.exception_handler(DuplicateEntityException)
 def handle_entity_not_found(
@@ -40,7 +42,8 @@ def handle_entity_not_found(
             "detail": {
                 "type": "duplicate_entity",
                 "entity_name": exception.entity_name,
-                "entity_id": exception.entity_id,
+                "entity_field": exception.entity_field,
+                "entity_value": exception.entity_value
             },
         },
     )
@@ -60,6 +63,8 @@ def handle_entity_not_found(
             },
         },
     )
+
+
 
 app.add_middleware(
     CORSMiddleware,

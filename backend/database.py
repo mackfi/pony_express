@@ -42,9 +42,10 @@ class EntityNotFoundException(Exception):
         self.entity_id = entity_id
 
 class DuplicateEntityException(Exception):
-    def __init__(self, *, entity_name: str, entity_id: str):
+    def __init__(self, *, entity_name: str, entity_field: str, entity_value: str):
         self.entity_name = entity_name
-        self.entity_id = entity_id
+        self.entity_field = entity_field
+        self.entity_value = entity_value
 
 
 
@@ -66,23 +67,23 @@ def get_all_chats(session: Session) -> list[Chat]:
 
     return session.exec(select(ChatInDB)).all()
 
-def create_user(user_id: str) -> User:
-    """
-    Create a new user in the database.
+# def create_user(user_id: str) -> User:
+#     """
+#     Create a new user in the database.
 
-    :param user_ide: id of the user to be created
-    :return: the newly created user
-    """
-    if user_id in DB["users"]:
+#     :param user_ide: id of the user to be created
+#     :return: the newly created user
+#     """
+#     if user_id in DB["users"]:
 
-        raise DuplicateEntityException(entity_name="User", entity_id=user_id)
+#         raise DuplicateEntityException(entity_name="User", entity_id=user_id)
 
-    user = User(
-        id=user_id,
-        created_at=datetime.now()
-    )
-    DB["users"][user.id] = user.model_dump()
-    return user
+#     user = User(
+#         id=user_id,
+#         created_at=datetime.now()
+#     )
+#     DB["users"][user.id] = user.model_dump()
+#     return user
 
 def get_user_by_id(session: Session, user_id: int) -> User:
     """

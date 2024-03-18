@@ -76,7 +76,12 @@ class User(SQLModel):
     created_at: datetime
 
 class UserCreate(BaseModel):
-    id: str
+    username: str
+    email: str
+    password: str
+
+class UserResponse(BaseModel):
+    user: User
 
 class Chat(SQLModel):
     id: int
