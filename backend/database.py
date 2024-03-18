@@ -10,6 +10,8 @@ from backend.schema import (
     Message,
     ChatUpdate,
     UserUpdate,
+    ChatResponse,
+    ChatMetaData,
 
     UserChatLinkInDB,
     UserInDB,
@@ -100,15 +102,19 @@ def get_user_by_id(session: Session, user_id: int) -> User:
     raise EntityNotFoundException(entity_name="User", entity_id=user_id)
 
 
-def get_chat_by_id(chat_id: str) -> Chat:
+def get_chat_by_id(session: Session, chat_id: int) -> ChatResponse:
     """
     Retrieve an chat from the database.
 
     :param chat_id: id of the chat to be retrieved
     :return: the retrieved chat
     """
-    if chat_id in DB["chats"]:
-        return Chat(**DB["chats"][chat_id])
+    chat = session.get(ChatInDB, chat_id)
+    if chat:
+        users = chat.users
+        messages = chat.messages
+        meta = ChatMetaData(message_count=len(messages), user_count=len(users))
+        return ChatResponse(meta=meta, chat=chat, messages=messages, users=users)
     
     raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
 

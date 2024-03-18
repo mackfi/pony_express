@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from backend.schema import User, Chat, UserCollection, ChatCollection, MessageCollection, ChatUpdate
+from backend.schema import User, Chat, UserCollection, ChatCollection, MessageCollection, ChatUpdate, ChatResponse
 from typing import Literal
 
 from sqlmodel import Session
@@ -27,8 +27,8 @@ def GetChats(
     )
 
 @chats_router.get("/{chat_id}", description="Retreives the specified chat from the DB.", name="Get Chat")
-def GetChat(chat_id: str, session: Session = Depends(db.get_session)):
-    return {"chat": db.get_chat_by_id(chat_id)}
+def GetChat(chat_id: int, session: Session = Depends(db.get_session)):
+    return db.get_chat_by_id(session, chat_id)
 
 @chats_router.put("/{chat_id}", description="Updates the specified chat in the DB.", name="Put Chat")
 def PutChat(chat_id: str, chat_update: ChatUpdate, 

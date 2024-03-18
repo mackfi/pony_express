@@ -92,6 +92,11 @@ class Chat(SQLModel):
 class ChatUpdate(SQLModel):
     name: str
 
+class ChatMetaData(BaseModel):
+    message_count: int
+    user_count: int
+
+
 class UserUpdate(SQLModel):
     username: str
     email: str
@@ -102,6 +107,12 @@ class Message(SQLModel):
     chat_id: int
     user: User
     created_at: datetime
+
+class ChatResponse(BaseModel):
+    meta: ChatMetaData
+    chat: Chat
+    messages: list[Message]
+    users: list[User]
 
 class Metadata(BaseModel):
     """Represents metadata for a collection."""
