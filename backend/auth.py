@@ -13,6 +13,7 @@ from pydantic import BaseModel, ValidationError
 from sqlmodel import Session, SQLModel, select
 
 from backend import database as db
+from backend.database import user_in_db_to_user
 
 from backend.schema import UserInDB, User, UserResponse
 from backend.database import DuplicateEntityException
@@ -91,7 +92,7 @@ def get_current_user(
     return user
 
 @auth_router.post("/registration")
-def register_new_user(registration: UserRegistration, session: Annotated[Session, Depends(db.get_session)]) -> UserResponse:
+def register_new_user(registration: UserRegistration, session: Annotated[Session, Depends(db.get_session)]):
     hashed_password = pwd_context.hash(registration.password)
     user = UserInDB(
         **registration.model_dump(),
@@ -110,7 +111,7 @@ def register_new_user(registration: UserRegistration, session: Annotated[Session
         if other_usernames:
             raise DuplicateEntityException(entity_name="User", entity_field="username", entity_value=user.username)
     
-    return UserResponse(user=user)
+    return user
 
 @auth_router.post("/token")
 def get_access_token(form: OAuth2PasswordRequestForm = Depends(),

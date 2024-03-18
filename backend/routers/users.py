@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Body, Depends
 from backend.schema import User, Chat, UserCollection, ChatCollection, UserCreate, UserInDB, UserResponse, UserUpdate
 from backend.auth import get_current_user
+from backend.database import user_in_db_to_user
 from typing import Literal, Annotated
 import json
 
@@ -29,7 +30,7 @@ def GetUsers(#sort: Literal["id"] = "id",
 @users_router.get("/me")
 def GetSelf(user: UserInDB = Depends(get_current_user), session: Session = Depends(db.get_session),) -> UserResponse:
     user = db.get_user_by_id(session, user.id)
-    return UserResponse(user=user)
+    return UserResponse(user=user_in_db_to_user(user))
 
 # @users_router.post("/", description="Adds the specified user to the DB.", name="Post Users")
 # def PostUsers(user_create: UserCreate,
@@ -54,4 +55,4 @@ def GetUserChats(user_id: str, sort: Literal["name"] = "name", session: Session 
 @users_router.put("/me")
 def UpdateSelf(update: UserUpdate, user: UserInDB = Depends(get_current_user), session: Session = Depends(db.get_session),) -> UserResponse:
     newUser = db.update_user(session, user.id, update)
-    return UserResponse(user=newUser)
+    return UserResponse(user=user_in_db_to_user(newUser))

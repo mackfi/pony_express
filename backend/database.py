@@ -173,7 +173,7 @@ def update_chat(session: Session, chat_id: int, update: ChatUpdate) -> Chat:
     return Chat(id=chat.id, name=chat.name, owner=user, created_at=chat.created_at)
 
 def user_in_db_to_user(dbUser: UserInDB):
-    return User(**dbUser.model_dump())
+    return User(id=dbUser.id, username = dbUser.username, email = dbUser.email, created_at = dbUser.created_at)
 
 def chat_in_db_to_chat(dbChat: ChatInDB):
     user = user_in_db_to_user(dbChat.owner)
