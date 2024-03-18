@@ -117,6 +117,8 @@ class ChatResponse(BaseModel):
 class MessageResponse(BaseModel):
     message: Message
 
+class MessageCreate(BaseModel):
+    text: str
 
 class Metadata(BaseModel):
     """Represents metadata for a collection."""

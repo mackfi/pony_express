@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
-from backend.schema import User, UserInDB, Chat, UserCollection, ChatCollection, MessageCollection, ChatUpdate, ChatResponse, MessageResponse
+from backend.schema import MessageCreate, User, UserInDB, Chat, UserCollection, ChatCollection, MessageCollection, ChatUpdate, ChatResponse, MessageResponse
 from typing import Annotated, Literal
 
 from backend.auth import get_current_user
@@ -37,11 +37,11 @@ def PutChat(chat_id: int, chat_update: ChatUpdate,
             session: Session = Depends(db.get_session)):
     return {"chat": db.update_chat(session, chat_id, chat_update)}
 
-@chats_router.post("/{chat_id}/messages", description="Creates the specified message in the DB of the currently logged in User.", name="Post Message")
-def PostMessage(chat_id: int, text: str, 
+@chats_router.post("/{chat_id}/messages", description="Creates the specified message in the DB of the currently logged in User.", name="Post Message", status_code=201)
+def PostMessage(chat_id: int, text: MessageCreate, 
             session: Session = Depends(db.get_session),
             user: UserInDB = Depends(get_current_user)) -> MessageResponse:
-    message = db.create_message(session, user, chat_id, text)
+    message = db.create_message(session, user, chat_id, text.text)
     return MessageResponse(message=message)
 
 # @chats_router.delete("/{chat_id}", description="Deletes the specified chat from the DB.", name="Delete Chat", status_code=204, response_model=None)
