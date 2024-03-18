@@ -37,8 +37,8 @@ def GetSelf(user: UserInDB = Depends(get_current_user), session: Session = Depen
 #     return {"user": db.create_user(user_create.id)}
 
 @users_router.get("/{user_id}", description="Retreives the specified user from the DB.", name="Get User")
-def GetUser(user_id: int, session: Session = Depends(db.get_session)):
-    return {"user": db.get_user_by_id(session, user_id)}
+def GetUser(user_id: int, session: Session = Depends(db.get_session)) -> UserResponse:
+    return UserResponse(user=User(**db.get_user_by_id(session, user_id).model_dump()))
 
 @users_router.get("/{user_id}/chats", description="Retreives all chats associated with a specified user from the DB.", name="Get User Chats")
 def GetUserChats(user_id: str, sort: Literal["name"] = "name", session: Session = Depends(db.get_session)) -> ChatCollection:

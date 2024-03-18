@@ -69,7 +69,7 @@ class MessageInDB(SQLModel, table=True):
 #
 #   OLD MODELS
 #
-class User(SQLModel):
+class User(BaseModel):
     id: int
     username: str
     email: str
@@ -83,7 +83,7 @@ class UserCreate(BaseModel):
 class UserResponse(BaseModel):
     user: User
 
-class Chat(SQLModel):
+class Chat(BaseModel):
     id: int
     name: str
     owner: User
