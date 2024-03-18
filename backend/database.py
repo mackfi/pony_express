@@ -9,6 +9,7 @@ from backend.schema import (
     Chat,
     Message,
     ChatUpdate,
+    UserUpdate,
 
     UserChatLinkInDB,
     UserInDB,
@@ -129,6 +130,25 @@ def update_chat(session: Session, chat_id: int, update: ChatUpdate) -> Chat:
     session.refresh(chat)
 
     return chat
+
+def update_user(session: Session, user_id: int, update: UserUpdate) -> User:
+    """
+    Update a user in the database.
+
+    :param username: id of the chat to be updated
+    :param email: attributes to be updated on the chat
+    :return: the updated user
+    """
+
+    user = session.get(UserInDB, user_id)
+    for attr, value in update.model_dump(exclude_unset=True).items():
+        setattr(user, attr, value)
+
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+    return user
 
 def delete_chat(chat_id: str):
     """

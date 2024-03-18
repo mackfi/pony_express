@@ -92,6 +92,10 @@ class Chat(SQLModel):
 class ChatUpdate(SQLModel):
     name: str
 
+class UserUpdate(SQLModel):
+    username: str
+    email: str
+
 class Message(SQLModel):
     id: int
     text: str
