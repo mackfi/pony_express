@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
-from backend.schema import User, Chat, UserCollection, ChatCollection, MessageCollection, ChatUpdate, ChatResponse
+from backend.schema import User, UserInDB, Chat, UserCollection, ChatCollection, MessageCollection, ChatUpdate, ChatResponse, MessageResponse
 from typing import Annotated, Literal
+
+from backend.auth import get_current_user
 
 from sqlmodel import Session
 
@@ -31,9 +33,16 @@ def GetChat(chat_id: int, include: Annotated[list[str] | None, Query(max_length=
     return db.get_chat_by_id(session, chat_id, include)
 
 @chats_router.put("/{chat_id}", description="Updates the specified chat in the DB.", name="Put Chat")
-def PutChat(chat_id: str, chat_update: ChatUpdate, 
+def PutChat(chat_id: int, chat_update: ChatUpdate, 
             session: Session = Depends(db.get_session)):
     return {"chat": db.update_chat(session, chat_id, chat_update)}
+
+@chats_router.post("/{chat_id}/messages", description="Creates the specified message in the DB of the currently logged in User.", name="Post Message")
+def PostMessage(chat_id: int, text: str, 
+            session: Session = Depends(db.get_session),
+            user: UserInDB = Depends(get_current_user)) -> MessageResponse:
+    message = db.create_message(session, user, chat_id, text)
+    return MessageResponse(message=message)
 
 # @chats_router.delete("/{chat_id}", description="Deletes the specified chat from the DB.", name="Delete Chat", status_code=204, response_model=None)
 # def DeleteChat(chat_id: str, session: Session = Depends(db.get_session)) -> None:

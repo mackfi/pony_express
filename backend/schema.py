@@ -101,7 +101,7 @@ class UserUpdate(SQLModel):
     username: str
     email: str
 
-class Message(SQLModel):
+class Message(BaseModel):
     id: int
     text: str
     chat_id: int
@@ -114,6 +114,8 @@ class ChatResponse(BaseModel):
     messages: list[Message] = None
     users: list[User] = None
 
+class MessageResponse(BaseModel):
+    message: Message
 
 
 class Metadata(BaseModel):

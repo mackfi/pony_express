@@ -259,3 +259,13 @@ def get_user_chats(session: Session, user_id: int) -> list[Chat]:
     retList = []
 
     return retList
+
+def create_message(session: Session, user: UserInDB, chat_id: int, text: str) -> Message:
+    chat = session.get(ChatInDB, chat_id)
+    if chat:
+        message = MessageInDB(text=text, chat=chat, chat_id=chat_id, user=user, user_id=user.id)
+        session.add(message)
+        session.commit()
+        session.refresh(message)
+        return message_in_db_to_message(message)
+    raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
