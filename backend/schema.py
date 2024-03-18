@@ -98,8 +98,8 @@ class ChatMetaData(BaseModel):
 
 
 class UserUpdate(SQLModel):
-    username: str
-    email: str
+    username: str = None
+    email: str = None
 
 class Message(BaseModel):
     id: int
