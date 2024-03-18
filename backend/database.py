@@ -54,14 +54,17 @@ class DuplicateEntityException(Exception):
 
 
 
-def get_all_users(session: Session) -> list[UserInDB]:
+def get_all_users(session: Session) -> list[User]:
     """
     Retrieve all users from the database.
 
     :return: ordered list of users
     """
-
-    return session.exec(select(UserInDB)).all()
+    users = session.exec(select(UserInDB)).all()
+    retList = []
+    for user in users:
+        retList.append(user_in_db_to_user(user))
+    return retList
 
 def get_all_chats(session: Session) -> list[Chat]:
     """
@@ -69,8 +72,11 @@ def get_all_chats(session: Session) -> list[Chat]:
 
     :return: ordered list of users
     """
-
-    return session.exec(select(ChatInDB)).all()
+    chats = session.exec(select(ChatInDB)).all()
+    retList = []
+    for chat in chats:
+        retList.append(chat_in_db_to_chat(chat))
+    return retList
 
 # def create_user(user_id: str) -> User:
 #     """
@@ -126,14 +132,24 @@ def get_chat_by_id(session: Session, chat_id: int, include: list[str] = None) ->
             messages = None
             users = None
         meta = ChatMetaData(message_count=message_count, user_count=user_count)
-        if messages and users:
-            return ChatResponse(meta=meta, chat=chat, messages=messages, users=users)
+
         if messages:
-            return ChatResponse(meta=meta, chat=chat, messages=messages)
-        if users:
-            return ChatResponse(meta=meta, chat=chat, users=users)
+            retMessages = []
+            for message in messages:
+                retMessages.append(message_in_db_to_message(message))
+        if users:    
+            retUsers = []
+            for user in users:
+                retUsers.append(user_in_db_to_user(user))
         
-        return ChatResponse(meta=meta, chat=chat)
+        if messages and users:
+            return ChatResponse(meta=meta, chat=chat_in_db_to_chat(chat), messages=retMessages, users=retUsers)
+        if messages:
+            return ChatResponse(meta=meta, chat=chat_in_db_to_chat(chat), messages=retMessages)
+        if users:
+            return ChatResponse(meta=meta, chat=chat_in_db_to_chat(chat), users=retUsers)
+        return ChatResponse(meta=meta, chat=chat_in_db_to_chat(chat))
+        # return ChatResponse(meta=meta, chat=chat)
     
     raise EntityNotFoundException(entity_name="Chat", entity_id=include)
 
@@ -158,6 +174,14 @@ def update_chat(session: Session, chat_id: int, update: ChatUpdate) -> Chat:
 
 def user_in_db_to_user(dbUser: UserInDB):
     return User(**dbUser.model_dump())
+
+def chat_in_db_to_chat(dbChat: ChatInDB):
+    user = user_in_db_to_user(dbChat.owner)
+    return Chat(id=dbChat.id, name=dbChat.name, owner=user, created_at=dbChat.created_at)
+
+def message_in_db_to_message(dbMessage: MessageInDB):
+
+    return Message(id=dbMessage.id, text=dbMessage.text, chat_id=dbMessage.chat_id, user=user_in_db_to_user(dbMessage.user), created_at=dbMessage.created_at)
 
 def update_user(session: Session, user_id: int, update: UserUpdate) -> User:
     """
@@ -197,7 +221,11 @@ def get_chat_messages_by_id(session: Session, chat_id: int) -> list[Message]:
     """
     chat = session.get(ChatInDB, chat_id)
     if chat:
-        return chat.messages
+        retList = []
+        for message in chat.messages:
+            retList.append(message_in_db_to_message(message))
+        return retList
+    
     raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
 
 def get_chat_users_by_id(session: Session, chat_id: int) -> list[User]:
@@ -208,7 +236,10 @@ def get_chat_users_by_id(session: Session, chat_id: int) -> list[User]:
     """
     chat = session.get(ChatInDB, chat_id)
     if chat:
-        return chat.users
+        retList = []
+        for user in chat.users:
+            retList.append(user_in_db_to_user(user))
+        return retList
     raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
 
 def get_user_chats(session: Session, user_id: int) -> list[Chat]:
@@ -217,9 +248,12 @@ def get_user_chats(session: Session, user_id: int) -> list[Chat]:
 
     :return: list of users.
     """
-    user = get_user_by_id(session, user_id)
+    user = session.get(UserInDB, user_id)
     if user:
-        return user.chats
+        retList = []
+        for chat in user.chats:
+            retList.append(chat_in_db_to_chat(chat))
+        return retList
     raise EntityNotFoundException(entity_name="User", entity_id=user_id)
     
     retList = []
