@@ -40,7 +40,7 @@ def handle_entity_not_found(
         status_code=422,
         content={
             "detail": {
-                "type": "duplicate_entity",
+                "type": "duplicate_value",
                 "entity_name": exception.entity_name,
                 "entity_field": exception.entity_field,
                 "entity_value": exception.entity_value
