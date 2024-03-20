@@ -6,21 +6,7 @@ from uuid import uuid4
 from sqlmodel import Session, SQLModel, create_engine, select
 
 
-from backend.schema import (
-    User,
-    Chat,
-    Message,
-    ChatUpdate,
-    UserUpdate,
-    ChatResponse,
-    ChatMetaData,
-
-    UserChatLinkInDB,
-    UserInDB,
-    ChatInDB,
-    MessageInDB
-)
-
+from backend.schema import *
 
 engine = create_engine(
     "sqlite:///backend/pony_express.db",
@@ -78,24 +64,6 @@ def get_all_chats(session: Session) -> list[Chat]:
         retList.append(chat_in_db_to_chat(chat))
     return retList
 
-# def create_user(user_id: str) -> User:
-#     """
-#     Create a new user in the database.
-
-#     :param user_ide: id of the user to be created
-#     :return: the newly created user
-#     """
-#     if user_id in DB["users"]:
-
-#         raise DuplicateEntityException(entity_name="User", entity_id=user_id)
-
-#     user = User(
-#         id=user_id,
-#         created_at=datetime.now()
-#     )
-#     DB["users"][user.id] = user.model_dump()
-#     return user
-
 def get_user_by_id(session: Session, user_id: int) -> User:
     """
     Retrieve an user from the database.
@@ -151,7 +119,7 @@ def get_chat_by_id(session: Session, chat_id: int, include: list[str] = None) ->
         return ChatResponse(meta=meta, chat=chat_in_db_to_chat(chat))
         # return ChatResponse(meta=meta, chat=chat)
     
-    raise EntityNotFoundException(entity_name="Chat", entity_id=include)
+    raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
 
 def update_chat(session: Session, chat_id: int, update: ChatUpdate) -> Chat:
     """
@@ -163,6 +131,8 @@ def update_chat(session: Session, chat_id: int, update: ChatUpdate) -> Chat:
     """
 
     chat = session.get(ChatInDB, chat_id)
+    if not chat:
+        raise EntityNotFoundException(entity_name="Chat", entity_id=chat_id)
     for attr, value in update.model_dump(exclude_unset=True).items():
         setattr(chat, attr, value)
 

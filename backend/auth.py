@@ -92,13 +92,14 @@ def get_current_user(
     return user
 
 @auth_router.post("/registration", status_code=201)
-def register_new_user(registration: UserRegistration, session: Annotated[Session, Depends(db.get_session)]) -> User:
+def register_new_user(registration: UserRegistration, session: Annotated[Session, Depends(db.get_session)]) -> UserResponse:
     hashed_password = pwd_context.hash(registration.password)
     user = UserInDB(
         **registration.model_dump(),
         hashed_password=hashed_password,
     )
     others = session.exec(select(UserInDB)).all()
+    
     
     for other in others:
         if other.email == user.email:
@@ -112,7 +113,7 @@ def register_new_user(registration: UserRegistration, session: Annotated[Session
     
     user = user_in_db_to_user(user)
 
-    return user
+    return UserResponse(user=user)
 
 @auth_router.post("/token")
 def get_access_token(form: OAuth2PasswordRequestForm = Depends(),

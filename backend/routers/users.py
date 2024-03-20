@@ -32,11 +32,6 @@ def GetSelf(user: UserInDB = Depends(get_current_user), session: Session = Depen
     user = db.get_user_by_id(session, user.id)
     return UserResponse(user=user_in_db_to_user(user))
 
-# @users_router.post("/", description="Adds the specified user to the DB.", name="Post Users")
-# def PostUsers(user_create: UserCreate,
-#               session: Session = Depends(db.get_session)):
-#     return {"user": db.create_user(user_create.id)}
-
 @users_router.get("/{user_id}", description="Retreives the specified user from the DB.", name="Get User")
 def GetUser(user_id: int, session: Session = Depends(db.get_session)) -> UserResponse:
     return UserResponse(user=User(**db.get_user_by_id(session, user_id).model_dump()))
@@ -49,8 +44,6 @@ def GetUserChats(user_id: str, sort: Literal["name"] = "name", session: Session 
         meta={"count": len(chats)},
         chats=sorted(chats, key=sort_key),
     )
-
-
 
 @users_router.put("/me")
 def UpdateSelf(update: UserUpdate, user: UserInDB = Depends(get_current_user), session: Session = Depends(db.get_session),) -> UserResponse:

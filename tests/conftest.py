@@ -4,9 +4,11 @@ from sqlmodel import Session, SQLModel, StaticPool, create_engine
 
 from backend.main import app
 from backend import database as db
+from backend.schema import *
 
 import backend.auth as auth
-
+import datetime
+from datetime import *
 
 @pytest.fixture
 def session():
@@ -37,6 +39,7 @@ def logged_in_client(session, user_fixture):
         return session
 
     def _get_current_user_override():
+        
         return user_fixture(username="juniper")
 
     app.dependency_overrides[db.get_session] = _get_session_override
@@ -63,3 +66,30 @@ def user_fixture(session):
         )
 
     return _build_user
+
+@pytest.fixture
+def chat_fixture(session):
+    def _build_chat(
+        name: str ="nostromo",
+        owner_id: int = 1,
+        owner: UserInDB=UserInDB(username="mack", email="mack@cool.mail"),
+        created_at: datetime = datetime.now(),
+        hashed_password: str = "hash"
+    ) -> db.ChatInDB:
+        chat = db.ChatInDB(
+            id=id,
+            name=name,
+            owner_id=owner_id,
+            owner=owner,
+            created_at=created_at,
+            hashed_password=hashed_password
+        )
+
+        session.add(chat)
+        session.commit()
+        session.refresh(chat)
+
+        return chat
+
+    return _build_chat
+
