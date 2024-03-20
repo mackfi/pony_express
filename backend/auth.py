@@ -20,7 +20,7 @@ from backend.database import DuplicateEntityException
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-jwt_key = os.environ.get("JWT_KEY", default="any string you want for a dev JWT key")
+jwt_key = str(os.environ.get("JWT_KEY", default="any string you want for a dev JWT key"))
 jwt_alg = "HS256"
 access_token_duration = 3600  # seconds
 
@@ -92,7 +92,7 @@ def get_current_user(
     return user
 
 @auth_router.post("/registration", status_code=201)
-def register_new_user(registration: UserRegistration, session: Annotated[Session, Depends(db.get_session)]) -> UserResponse:
+def register_new_user(registration: UserRegistration, session: Annotated[Session, Depends(db.get_session)]) -> User:
     hashed_password = pwd_context.hash(registration.password)
     user = UserInDB(
         **registration.model_dump(),
@@ -112,7 +112,7 @@ def register_new_user(registration: UserRegistration, session: Annotated[Session
     
     user = user_in_db_to_user(user)
 
-    return UserResponse(user=user)
+    return user
 
 @auth_router.post("/token")
 def get_access_token(form: OAuth2PasswordRequestForm = Depends(),
