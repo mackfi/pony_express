@@ -3,13 +3,16 @@ import { Link, useParams } from "react-router-dom";
 import "./ChatsPage.css";
 import ChatList from "./ChatList";
 import ChatCardQueryContainer from "./Chat"
+import LeftNav from "./LeftNav";
 
 function ChatsPage() {
     const { chatId } = useParams();
     return (
       <div className="chats-page">
-        <ChatListContainer />
+        <LeftNav />
         {chatId ? <ChatCardQueryContainer chatId={chatId} /> : <h2 className="col-header">select a chat</h2>}
+        {/* <ChatListContainer />
+        {chatId ? <ChatCardQueryContainer chatId={chatId} /> : <h2 className="col-header">select a chat</h2>} */}
       </div>
     );
 }

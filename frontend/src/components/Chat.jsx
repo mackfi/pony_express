@@ -17,7 +17,7 @@ function Chat({chat}) {
         {data.messages.map((message) => (
             <div key={message.id} className="message-card"> 
             <div className="message-header">
-             <div className="message-user">{message.user_id} </div>
+             <div className="message-user">{message.user.username} </div>
              <div className="message-details">{new Date(message.created_at).toDateString()} - {new Date(message.created_at).toLocaleTimeString()} </div>
              </div>
              <div className="message-text">{message.text} </div>
