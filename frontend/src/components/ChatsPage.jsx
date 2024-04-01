@@ -4,13 +4,14 @@ import "./ChatsPage.css";
 import ChatList from "./ChatList";
 import ChatCardQueryContainer from "./Chat"
 import LeftNav from "./LeftNav";
+import SendMessage from "./SendMessage";
 
 function ChatsPage() {
     const { chatId } = useParams();
     return (
       <div className="chats-page">
         <LeftNav />
-        {chatId ? <ChatCardQueryContainer chatId={chatId} /> : <h2 className="col-header">select a chat</h2>}
+        {chatId ? <><ChatCardQueryContainer chatId={chatId} /></>: <h2 className="col-header">select a chat</h2>}
         {/* <ChatListContainer />
         {chatId ? <ChatCardQueryContainer chatId={chatId} /> : <h2 className="col-header">select a chat</h2>} */}
       </div>

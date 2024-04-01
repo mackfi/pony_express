@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import "./ChatsPage.css";
+import SendMessage from "./SendMessage";
 
 function Chat({chat}) {
 
@@ -13,6 +14,7 @@ function Chat({chat}) {
       });
       if (data && data.messages) {
         return (
+          <>
         <div className="message-list">
         {data.messages.map((message) => (
             <div key={message.id} className="message-card"> 
@@ -24,6 +26,10 @@ function Chat({chat}) {
             </div>
           ))}
         </div>
+        <div>
+          <SendMessage chatId={chat.id}/>
+        </div>
+        </>
         )
       }
 }
@@ -38,7 +44,11 @@ function ChatCardQueryContainer({ chatId }) {
     });
   
     if (data && data.chat) {
-      return <ChatCardContainer chat={data.chat} />
+      return (
+        <>
+          <ChatCardContainer chat={data.chat} />
+        </>
+      )
     }
   
     return <h2>loading...</h2>

@@ -1,13 +1,16 @@
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
+import SendMessage from "./SendMessage";
 
 function ChatList({ chats }) {
     return (
-      <div className="chat-list">
-        {chats.map((chat) => (
-          <ChatListItem key={chat.id} chat={chat} />
-        ))}
-      </div>
+      <>
+        <div className="chat-list">
+          {chats.map((chat) => (
+            <ChatListItem key={chat.id} chat={chat} />
+          ))}
+        </div>
+      </>
     )
   }
 
