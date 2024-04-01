@@ -3,13 +3,30 @@ import { useAuth } from "../context/auth";
 import { useUser } from "../context/user";
 import Button from "./Button";
 import FormInput from "./FormInput";
+import { useMutation, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
+
+function Error({ message }) {
+    if (message === "") {
+      return <></>;
+    }
+    return (
+      <div className="text-red-300 text-xs">
+        {message}
+      </div>
+    );
+  }
 
 function Profile() {
   const { logout } = useAuth();
+  const { token } = useAuth();
   const user = useUser();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [readOnly, setReadOnly] = useState(true);
+  const [error, setError] = useState("");
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const reset = () => {
     if (user) {
@@ -25,12 +42,42 @@ function Profile() {
     console.log("username: " + username);
     console.log("email: " + email);
     setReadOnly(true);
+    mutation.mutate();
   }
 
   const onClick = () => {
     setReadOnly(!readOnly);
     reset();
   };
+
+  const mutation = useMutation({
+    mutationFn: () => (
+      fetch(
+        `http://127.0.0.1:8000/users/me`,
+        {
+          method: "PUT",
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "username": username,
+            "email": email,
+          }),
+        },
+      )//.then((response) => response.json())
+    ),
+    onError: (data) => {
+        setError("Couldn't update name/email. Choose a unique name/email that doesn't already exist.")
+    },
+    onSuccess: (data) => {
+      setError("")
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+      navigate(`/profile/`);
+    },
+  });
 
   return (
     <div className="max-w-96 mx-auto px-4 py-8">
@@ -61,6 +108,7 @@ function Profile() {
           {readOnly ? "edit" : "cancel"}
         </Button>
       </form>
+      <Error message={error} />
       <Button onClick={logout}>
         logout
       </Button>

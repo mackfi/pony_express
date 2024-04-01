@@ -3,7 +3,6 @@ import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./auth";
 
-//TODO: Double check if there are any buddy_system-specific things to change.
 const UserContext = createContext();
 
 function UserProvider({ children }) {

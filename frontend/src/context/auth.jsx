@@ -1,9 +1,8 @@
 import { createContext, useContext, useState } from "react";
 
-//TODO: Change buddy_system-specific things in this file.
-const getToken = () => sessionStorage.getItem("__buddy_system_token__");
-const storeToken = (token) => sessionStorage.setItem("__buddy_system_token__", token);
-const clearToken = () => sessionStorage.removeItem("__buddy_system_token__");
+const getToken = () => sessionStorage.getItem("__pony_express_token__");
+const storeToken = (token) => sessionStorage.setItem("__pony_express_token__", token);
+const clearToken = () => sessionStorage.removeItem("__pony_express_token__");
 
 const AuthContext = createContext();
 
