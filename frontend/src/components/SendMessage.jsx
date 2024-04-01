@@ -42,7 +42,7 @@ function SendMessage({chatId}) {
     ),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ["chats", data.chat_id],
+        queryKey: ["chats"],
       });
       navigate(`/chats/${chatId}`);
       // alternatively, we could "reset" the form

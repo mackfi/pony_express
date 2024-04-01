@@ -5,6 +5,7 @@ import ChatList from "./ChatList";
 import ChatCardQueryContainer from "./Chat"
 import LeftNav from "./LeftNav";
 import SendMessage from "./SendMessage";
+import ScrollContainer from "./ScrollContainer";
 
 function ChatsPage() {
     const { chatId } = useParams();
