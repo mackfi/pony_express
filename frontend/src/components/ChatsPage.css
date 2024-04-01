@@ -5,9 +5,15 @@
     height: 75vh;
 }
 .col-header {
-    border: 2px solid ghostwhite;
+    /* border: 2px solid ghostwhite; */
+    /* align-items: center; */
+    /* justify-content: center; */
+    /* flex-direction: row; */
+    text-align: center;
     height: 8vh;
     flex-grow: 2;
+    font-size:xx-large;
+    padding-top: 2rem;
 }
 
 .chat-list {
@@ -16,7 +22,7 @@
     flex-direction: column;
     max-height: 75vh;
     width: 22vw;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     
 }
 
@@ -47,7 +53,7 @@
     flex-direction: column;
     max-height: 75vh;
     width: 68vw;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
 }
 
 .message-card {

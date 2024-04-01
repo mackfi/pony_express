@@ -60,7 +60,7 @@ function ChatCardQueryContainer({ chatId }) {
   function ChatCardContainer({ chat }) {
     return (
       <div className="chat-card-container">
-        <h2 className="col-header">{chat.chat.name}</h2>
+        {/* <h2 className="col-header">{chat.chat.name}</h2> */}
         <Chat chat={chat} />
       </div>
     );

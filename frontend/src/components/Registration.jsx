@@ -82,3 +82,4 @@ function Registration() {
 }
 
 export default Registration;
+export {LoginLink}

@@ -68,7 +68,7 @@ function Login() {
   }
 
   return (
-    <div className="max-w-96 mx-auto py-8 px-4">
+    <div className=" w-96 mx-auto py-8 px-4">
       <form onSubmit={onSubmit}>
         <FormInput type="text" name="username" setter={setUsername} />
         <FormInput type="password" name="password" setter={setPassword} />

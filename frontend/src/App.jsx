@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route, Link } from 'react-router-dom';
 import './App.css'
 import "./components/ChatsPage"
 import ChatsPage from './components/ChatsPage';
@@ -11,6 +11,8 @@ import Registration from './components/Registration';
 import Profile from './components/Profile';
 import LeftNav from './components/LeftNav';
 import TopNav from './components/TopNav';
+import { LoginLink } from './components/Registration';
+import Button from './components/Button';
 
 const queryClient = new QueryClient();
 
@@ -20,9 +22,26 @@ function NotFound() {
 
 function Header() {
   return (
-    <header>
+    <header className=''>
       <TopNav />
     </header>
+  );
+}
+
+function Home() {
+
+  return (
+    <div className="max-w-4/5 mx-auto text-center px-4 py-8 text-xl">
+      welcome to pony express!
+      <p className='p-4'>pony express is a simple (but very cool) chat application built for CS 4550 at the University of Utah. </p>
+      <p className='p-4'>on the backend, this application uses FastAPI, pydantic, and SQLite. on the frontend, this application uses React, Vite, and TailwindCSS.</p>
+      <p className='p-4'>to log in, click the link below.</p>
+      <Link to="/login">
+        <Button className="mt-1 w-full">
+          get started
+        </Button>
+      </Link>
+    </div>
   );
 }
 
@@ -30,7 +49,7 @@ function Main() {
   const { isLoggedIn } = useAuth();
 
   return (
-    <main className="max-h-main">
+    <main className="max-h-main w-full">
       {isLoggedIn ?
         <AuthenticatedRoutes /> :
         <UnauthenticatedRoutes />
@@ -55,7 +74,7 @@ function AuthenticatedRoutes() {
 function UnauthenticatedRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<ChatsPage/>} />
+      <Route path="/" element={<Home/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Registration />} />
       <Route path="*" element={<Navigate to="/login" />} />

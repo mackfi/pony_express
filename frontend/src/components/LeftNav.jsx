@@ -12,10 +12,10 @@ function Link({ chat }) {
   const url = chat.empty ? "#" : `/chats/${chat.id}`;
   const className = ({ isActive }) => [
     "p-2",
-    "hover:bg-slate-800 hover:text-grn",
+    "hover:bg-indigo-950 hover:text-grn",
     "flex flex-row justify-between",
     isActive ?
-      "bg-slate-800 text-grn font-bold" :
+      "bg-indigo-800 text-grn font-bold" :
       ""
   ].join(" ");
 
@@ -33,7 +33,6 @@ function Link({ chat }) {
 function LeftNav() {
   const [search, setSearch] = useState("");
 
-  //TODO: Extra parameter for queryKey, so it updates automatically
   const { data } = useQuery({
     queryKey: ["chats"],
     queryFn: () => (
@@ -50,8 +49,8 @@ function LeftNav() {
   ));
 
   return (
-    <nav className="flex flex-col border-r-2 border-purple-400 h-main">
-      <div className="flex flex-col overflow-y-scroll border-b-2 border-purple-400">
+    <nav className="flex flex-col border-r-2 border-amber-400 h-main">
+      <div className="flex flex-col overflow-y-scroll border-b-2 border-amber-400">
         {chats.map((chat) => (
           <Link key={chat.id} chat={chat} />
         ))}
