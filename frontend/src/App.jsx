@@ -17,12 +17,12 @@ import Button from './components/Button';
 const queryClient = new QueryClient();
 
 function NotFound() {
-  return <h1>404: not found</h1>;
+  return <h1 className=' text-9xl text-center py-10'>404: not found</h1>;
 }
 
 function Header() {
   return (
-    <header className=''>
+    <header>
       <TopNav />
     </header>
   );
@@ -61,7 +61,7 @@ function Main() {
 function AuthenticatedRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<ChatsPage />} />
+      <Route path="/" element={<Navigate to="/chats" />} />
       <Route path="/chats" element={<ChatsPage />} />
       <Route path="/chats/:chatId" element={<ChatsPage />} />
       <Route path="/profile" element={<Profile />} />
