@@ -6,6 +6,8 @@ import FormInput from "./FormInput";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
 function Error({ message }) {
     if (message === "") {
       return <></>;
@@ -53,7 +55,7 @@ function Profile() {
   const mutation = useMutation({
     mutationFn: () => (
       fetch(
-        `http://127.0.0.1:8000/users/me`,
+        baseUrl+`/users/me`,
         {
           method: "PUT",
           headers: {

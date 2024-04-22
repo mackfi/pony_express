@@ -4,14 +4,28 @@ from typing import Annotated
 from fastapi import Query
 from uuid import uuid4
 from sqlmodel import Session, SQLModel, create_engine, select
-
+import os
 
 from backend.schema import *
 
+if os.environ.get("DB_LOCATION") == "RDS":
+    username = os.environ.get("PG_USERNAME")
+    password = os.environ.get("PG_PASSWORD")
+    endpoint = os.environ.get("PG_ENDPOINT")
+    port = os.environ.get("PG_PORT")
+    db_url = f"postgresql://{username}:{password}@{endpoint}:{port}/{username}"
+    echo = False
+    connect_args = {}
+else:
+    db_url = "sqlite:///backend/pony_express.db"
+    echo = True
+    connect_args = {"check_same_thread": False}
+
+
 engine = create_engine(
-    "sqlite:///backend/pony_express.db",
-    echo=True,
-    connect_args={"check_same_thread": False},
+    db_url,
+    echo=echo,
+    connect_args=connect_args,
 )
 
 

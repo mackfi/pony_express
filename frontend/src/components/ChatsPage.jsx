@@ -7,6 +7,8 @@ import LeftNav from "./LeftNav";
 import SendMessage from "./SendMessage";
 import ScrollContainer from "./ScrollContainer";
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
 function ChatsPage() {
     const { chatId } = useParams();
     return (
@@ -24,7 +26,7 @@ function ChatListContainer() {
     const { data } = useQuery({
         queryKey: ["chats"],
         queryFn: () => (
-          fetch("http://127.0.0.1:8000/chats")
+          fetch(baseUrl+"/chats")
             .then((response) => response.json())
         ),
       });

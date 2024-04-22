@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth";
 import Button from "./Button";
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
 function Input(props) {
   return (
     <div className="flex flex-col py-2">
@@ -27,7 +29,7 @@ function SendMessage({chatId}) {
   const mutation = useMutation({
     mutationFn: () => (
       fetch(
-        `http://127.0.0.1:8000/chats/${chatId}/messages`,
+        baseUrl+`/chats/${chatId}/messages`,
         {
           method: "POST",
           headers: {

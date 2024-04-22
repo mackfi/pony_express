@@ -4,12 +4,14 @@ import "./ChatsPage.css";
 import SendMessage from "./SendMessage";
 import ScrollContainer from "./ScrollContainer";
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
 function Chat({chat}) {
 
     const { data } = useQuery({
         queryKey: ["chat", chat.meta.message_count],
         queryFn: () => (
-          fetch(`http://127.0.0.1:8000/chats/${chat.chat.id}/messages`)
+          fetch(baseUrl+`/chats/${chat.chat.id}/messages`)
             .then((response) => response.json())
         ),
       });
@@ -41,7 +43,7 @@ function ChatCardQueryContainer({ chatId }) {
     const { data } = useQuery({
       queryKey: ["chats", chatId],
       queryFn: () => (
-        fetch(`http://127.0.0.1:8000/chats/${chatId}`)
+        fetch(baseUrl+`/chats/${chatId}`)
           .then((response) => response.json())
       ),
     });

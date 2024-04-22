@@ -13,6 +13,9 @@ from contextlib import asynccontextmanager
 
 from backend.database import create_db_and_tables
 
+
+from mangum import Mangum
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db_and_tables()
@@ -74,8 +77,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#Users
-
-#Chats
 
 
+lambda_handler = Mangum(app)
